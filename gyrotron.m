@@ -99,13 +99,13 @@ if INTZ < 1
 end
 
 if INTT > 1 && INTZ > 1
-    OUTNt = fix(Nt/INTT) + 1;
-    OUTNz = fix((Nz)/INTZ) + 1;
+    OUTNt = fix((Nt-1)/INTT) + 1;
+    OUTNz = fix((Nz-1)/INTZ) + 1;
 elseif INTT == 1 && INTZ > 1
     OUTNt = Nt;
-    OUTNz = fix((Nz)/INTZ) + 1;
+    OUTNz = fix((Nz-1)/INTZ) + 1;
 elseif INTT > 1 && INTZ == 1
-    OUTNt = fix(Nt/INTT) + 1;
+    OUTNt = fix((Nt-1)/INTT) + 1;
     OUTNz = Nz;
 else
     OUTNt = Nt;
@@ -241,9 +241,6 @@ fprintf(fileID,'ZetaEx = %f\n', ZetaEx);
 fprintf(fileID,'TauEnd = %f\n', TauEnd);
 fprintf(fileID,'Delta = %f\n', Delta);
 fprintf(fileID,'I0 = %f\n', I0);
-fprintf(fileID,'R0 = %f\n', R0);
-fprintf(fileID,'g = %f\n', g);
-fprintf(fileID,'ukv = %f\n', ukv);
 fprintf(fileID,'dz = %f\n', dz);
 fprintf(fileID,'dt = %f\n', dt);
 fprintf(fileID,'tol = %g\n', tol);

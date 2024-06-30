@@ -68,7 +68,8 @@ Nzm1 = Nz - 1;
 C0 = 1.0D0;
 CL = -1i*kpar2(1);
 CR = -1i*kpar2(Nz);
-C1 = 1.0D0/sqrt(1i*pi);
+% C1 = 1.0D0/sqrt(1i*pi);
+C1 = 0;
 C2 = 1.0D0/sqrt(1i*pi);
 W0 = ((-1i*2.0D0/3.0D0*C0*dz/dt) - 1.0D0/dz);
 W1 = ((-1i*C0/3.0D0*dz/dt) + 1.0D0/dz);
@@ -80,7 +81,7 @@ A(2:Nzm1) = -2.0D0*(1.0D0 + 1i * SQRDZ/dt*C0);
 A(Nz) = 1.0D0 + 4.0D0/3.0D0*C2*WNz*SQRDT;
 B(1) =   -4.0D0/3.0D0*C1*W1*SQRDT;
 B(2:Nzm1) = 1.0D0;
-C(1:Nz-2) = 1.0D0;
+C(1:Nzm1 - 1) = 1.0D0;
 C(Nzm1) = 4.0D0/3.0D0*C2*WNzm1*SQRDT;
 
 M = spdiags([[C; 0] A [0 ;B]], -1:1, Nz, Nz);
@@ -102,7 +103,7 @@ J(1:Nz2,1) = Ic * sum(p, 2)/Ne;
 cu(:,1) = J(:) - 1i*kpar2(:).*field(:);
 OUTJ(:,jout) = J(IZ,1);
 
-IDX = @(j) (j + 1);
+% IDX = @(j) (j + 1);
 
 fmax(IDX(0)) = max(abs(field(:,1)));
 jmax(IDX(0)) = max(abs(cu(:,1)));
@@ -186,14 +187,14 @@ for step=1:Nt-1
     elseif step == 2
         IL = coeff_4_d_3_m_SQRDT * (ul(0)*(1 - SQR2D2) + ul(1)*(SQR2M2 - 2.5D0));
     else
-%         j = 1:step-2;
-%         IL = coeff_4_d_3_m_SQRDT * (ul(0)*((step - 1).^(1.5) - (step - 1.5)*sqrt(step))...
-%             + sum(ul(j).*((step - j - 1).^(1.5) - 2*(step - j).^(1.5) + (step - j + 1).^(1.5)))...
-%             + ul(step - 1)*(SQR2M2 - 2.5));
-        IL = coeff_4_d_3_m_SQRDT * (ul(0)*((step - 1.0D0).^(1.5) - (step - 1.5D0)*sqrt(step)) + ul(step - 1)*(SQR2M2 - 2.5D0));
-        for j = 1:step-2
-            IL = IL + coeff_4_d_3_m_SQRDT * (ul(j).*((step - j - 1.0D0).^(1.5) - 2.0D0*(step - j).^(1.5) + (step - j + 1.0D0).^(1.5)));
-        end         
+        j = 1:step-2;
+        IL = coeff_4_d_3_m_SQRDT * (ul(0)*((step - 1).^(1.5) - (step - 1.5)*sqrt(step))...
+            + sum(ul(j).*((step - j - 1).^(1.5) - 2*(step - j).^(1.5) + (step - j + 1).^(1.5)))...
+            + ul(step - 1)*(SQR2M2 - 2.5));
+        % IL = coeff_4_d_3_m_SQRDT * (ul(0)*((step - 1.0D0).^(1.5) - (step - 1.5D0)*sqrt(step)) + ul(step - 1)*(SQR2M2 - 2.5D0));
+        % for j = 1:step-2
+        %     IL = IL + coeff_4_d_3_m_SQRDT * (ul(j).*((step - j - 1.0D0).^(1.5) - 2.0D0*(step - j).^(1.5) + (step - j + 1.0D0).^(1.5)));
+        % end         
     end
     
     if step == 1
@@ -201,14 +202,14 @@ for step=1:Nt-1
     elseif step == 2
         IR = coeff_4_d_3_m_SQRDT * (ur(0)*(1 - SQR2D2) + ur(1)*(SQR2M2 - 2.5D0));
     else
-%         j = 1:step-2;
-%         IR = coeff_4_d_3_m_SQRDT * (ur(0)*((step - 1).^(1.5) - (step - 1.5)*sqrt(step))...
-%             + sum(ur(j).*((step - j - 1).^(1.5) - 2*(step - j).^(1.5) + (step - j + 1).^(1.5)))...
-%             + ur(step - 1)*(SQR2M2 - 2.5));
-        IR = coeff_4_d_3_m_SQRDT * (ur(0)*((step - 1.0D0).^(1.5) - (step - 1.5D0)*sqrt(step)) + ur(step - 1)*(SQR2M2 - 2.5D0));
-        for j = 1:step-2
-            IR = IR + coeff_4_d_3_m_SQRDT * (ur(j).*((step - j - 1.0D0).^(1.5) - 2.0D0*(step - j).^(1.5) + (step - j + 1.0D0).^(1.5)));
-        end         
+        j = 1:step-2;
+        IR = coeff_4_d_3_m_SQRDT * (ur(0)*((step - 1).^(1.5) - (step - 1.5)*sqrt(step))...
+            + sum(ur(j).*((step - j - 1).^(1.5) - 2*(step - j).^(1.5) + (step - j + 1).^(1.5)))...
+            + ur(step - 1)*(SQR2M2 - 2.5));
+        % IR = coeff_4_d_3_m_SQRDT * (ur(0)*((step - 1.0D0).^(1.5) - (step - 1.5D0)*sqrt(step)) + ur(step - 1)*(SQR2M2 - 2.5D0));
+        % for j = 1:step-2
+        %     IR = IR + coeff_4_d_3_m_SQRDT * (ur(j).*((step - j - 1.0D0).^(1.5) - 2.0D0*(step - j).^(1.5) + (step - j + 1.0D0).^(1.5)));
+        % end         
     end
 
     % D(1) = 0;
@@ -240,7 +241,7 @@ for step=1:Nt-1
     testfield = field_p;
     while 1
         num_insteps = num_insteps + 1;
-        p = oscill_ode(field(1:Nz2), Nz2, ZAxis(1:Nz2), Delta, p0v, reidx, imidx);
+        p = oscill_ode(field_p(1:Nz2), Nz2, ZAxis(1:Nz2), Delta, p0v, reidx, imidx);
         % p = oscill_reim(field_p(1:Nz2), Nz2, ZAxis(1:Nz2), Delta, p0v, reidx, imidx);
         % p = oscill_cmplx(field_p(1:Nz2), ZAxis(1:Nz2), Delta, p0);
         J_p(1:Nz2,1) = Ic * sum(p, 2)/ Ne;             
@@ -316,10 +317,10 @@ for step=1:Nt-1
     
     Sigma0(IDX(step)) = -(-coeff_1i_m_C0_d_3_d_dt) * field(1) ...
         + (-coeff_1i_m_C0_d_3_d_dt) * F0(IDX(step - 1)) ...
-        -coeff_1i_d_6*(cu(Nz) + J0(IDX(step - 1))) - Sigma0(IDX(step - 1));
+        -coeff_1i_d_6*(cu(1) + J0(IDX(step - 1))) - Sigma0(IDX(step - 1));
     Sigma1(IDX(step)) = -(-coeff_1i_m_C0_d_3_d_dt) * field(2) ...
         + (-coeff_1i_m_C0_d_3_d_dt) * F1(IDX(step - 1)) ...
-        -coeff_1i_d_6*(cu(Nzm1) + J1(IDX(step - 1))) - Sigma1(IDX(step - 1));
+        -coeff_1i_d_6*(cu(2) + J1(IDX(step - 1))) - Sigma1(IDX(step - 1));
 
     SigmaNz(IDX(step)) = -(-coeff_1i_m_C0_d_3_d_dt) * field(Nz) ...
         + (-coeff_1i_m_C0_d_3_d_dt) * FNz(IDX(step - 1)) ...
@@ -337,7 +338,7 @@ for step=1:Nt-1
         '\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b'...
         '\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b'...        
         'Step = %8i   Time = %10.4f   Bmax = %+15.10e   Jmax = %+15.10e   W = %+15.10e   E = %+15.10e'],...
-        int64(step), TAxis(k), fmax(k), max(abs(cu(:,1))), Omega(IDX(step)), Eff(IDX(step)));
+        int64(step), TAxis(k), fmax(k), max(abs(cu(:,1))), Omega(IDX(step)), Eff(IDX(step)));   
 end
 
 OUTJ(:,jout) = J(IZ,1);
@@ -355,11 +356,18 @@ fprintf("ExecitionTime = %8.4f [h]   %8.4f [m]   %8.4f [s]\n", hours, minutes, s
 fprintf(" \n\n");
 
     function  f = ur(j)
+        coder.inline("always");
         f = (WNzm1 * FNzm1(IDX(j)) + WNz * FNz(IDX(j)) + WR(IDX(j))).' .* exp(coeff_CR_m_dt * (step - j));
     end
 
     function  f = ul(j)
+        coder.inline("always");
         f = (W1 * F1(IDX(j)) + W0 * F0(IDX(j)) + WL(IDX(j))).' .* exp(coeff_CL_m_dt * (step - j));
+    end
+
+    function j = IDX(j)
+        coder.inline("always");
+        j = j + 1;
     end
 end
 
