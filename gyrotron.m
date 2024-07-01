@@ -1,6 +1,6 @@
-function [OUTFre, OUTFim, OUTJre, OUTJim, OUTZAxis, OUTTAxis, Eff, Omega, jout] = gyrotron() %#codegen
+function [OUTFre, OUTFim, OUTJre, OUTJim, pre, pim, OUTZAxis, OUTTAxis, Eff, Omega, jout] = gyrotron() %#codegen
 % function [OUTFre, OUTFim, OUTJre, OUTJim, OUTZAxis, OUTTAxis, Eff, Omega, jout] = ...
-% gyrotron(Ne, z0, zex, zin, Tend, Delta, I0, dz, dt, tol, INTT, INTZ, a0, mode, akp2, nexl, nexr) %#codegen
+% gyrotron(Ne, z0, zex, zin, Tend, Delta, I0, dz, dt, tol, INTT, INTZ, a0, nexl, nexr, mode, akp2) %#codegen
 
 input_param = read_namelist('input_fortran.in', 'param');
 
@@ -152,7 +152,7 @@ fprintf(fileID,'INTZ = %i\n', int64(INTZ));
 fprintf(fileID,'a0 = %f\n', a0);
 fclose(fileID);
 
-[OUTF, OUTJ, Eff, Omega, jout] = gyroscr(Nz1, Nz2, Nt, Ne, ZAxis, TAxis, Delta, ...
+[OUTF, OUTJ, p, Eff, Omega, jout] = gyroscr(Nz1, Nz2, Nt, Ne, ZAxis, TAxis, Delta, ...
     I0, dt, dz, tol, kpar2, INTT, INTZ, OUTNz, OUTNt, InitialField);
 
 Folder = 'results/';
@@ -170,6 +170,8 @@ OUTFre = real(OUTF);
 OUTFim = imag(OUTF);
 OUTJre = real(OUTJ);
 OUTJim = imag(OUTJ);
+pre = real(p);
+pim = imag(p);
 
 % fileID = fopen('fre_m.dat','w');
 % for idx0 = 1:OUTNz
@@ -232,6 +234,8 @@ fileResultsEff = sprintf('%s/%s', FolderName, 'e.dat');
 fileResultsW = sprintf('%s/%s', FolderName, 'w.dat');
 fileT = sprintf('%s/%s', FolderName, 'Time.dat');
 fileZ = sprintf('%s/%s', FolderName, 'Z.dat');
+fileResultsPre = sprintf('%s/%s', FolderName, 'pre.dat');
+fileResultsPim = sprintf('%s/%s', FolderName, 'pim.dat');
 
 fileID = fopen(fileParameters ,'w');
 fprintf(fileID,'Nz = %f\n', Nz);
@@ -251,6 +255,8 @@ OUTFre = [OUTZAxis OUTFre];
 OUTFim = [OUTZAxis OUTFim]; 
 OUTJre = [OUTZAxis OUTJre];
 OUTJim = [OUTZAxis OUTJim];
+pre = [ZAxis(1:Nz2) pre];
+pim = [ZAxis(1:Nz2) pim];
 
 OUTEff = [TAxis Eff];
 OUTOmega = [TAxis Omega];
@@ -261,6 +267,8 @@ save(fileResultsJre, 'OUTJre', '-ascii');
 save(fileResultsJim, 'OUTJim', '-ascii');
 save(fileResultsEff, 'OUTEff', '-ascii');
 save(fileResultsW, 'OUTOmega', '-ascii');
+save(fileResultsPre, 'pre', '-ascii');
+save(fileResultsPim, 'pim', '-ascii');
 
 save(fileT, 'TAxis', '-ascii');
 save(fileZ, 'ZAxis', '-ascii');

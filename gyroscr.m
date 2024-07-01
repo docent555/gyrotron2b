@@ -1,4 +1,4 @@
-function [OUTF, OUTJ, Eff, Omega, jout] = gyroscr(Nz1, Nz2, Nt, Ne, ZAxis, TAxis, Delta, Ic, dt, dz, tol, kpar2, INTT, INTZ, OUTNz, OUTNt, InitialField) %#codegen
+function [OUTF, OUTJ, p, Eff, Omega, jout] = gyroscr(Nz1, Nz2, Nt, Ne, ZAxis, TAxis, Delta, Ic, dt, dz, tol, kpar2, INTT, INTZ, OUTNz, OUTNt, InitialField) %#codegen
 
 % fileID = fopen('wow.txt','w');
 % fprintf(fileID,'WithOUT kpar2!');
